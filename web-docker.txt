@@ -1,0 +1,37 @@
+# dockerfile to build image for Apache webserver2.4 Version
+FROM docker.io/httpd
+   
+# file author / maintainer
+MAINTAINER "Venkata SaiKrishna Nukala" "venkata.nukala@maryland.gov"
+
+# update OS
+RUN apt-get update
+RUN apt-get install sudo
+
+# Installing vim and aws cli
+RUN apt-get install vim -y
+RUN apt-get install awscli -y
+
+#Adding apache user
+#RUN useradd apache
+
+#Adding permissions to Apache user
+#RUN chown -R apache /usr/local/apache2/
+
+#Switching to User apache
+#USER apache
+
+# starting image building process
+ADD . /WEB
+WORKDIR /WEB
+#RUN rm -rf /usr/local/apache2/htdocs/index.html
+#RUN cp -rf /WEB/dist/ /usr/local/apache2/htdocs/
+#RUN cp -rf /WEB/dist/*.* /usr/local/apache2/htdocs/
+#RUN cp -rf /WEB/dist/assets /usr/local/apache2/htdocs/
+RUN mkdir -p /usr/local/apache2/htdocs/search
+RUN rm -rf /usr/local/apache2/htdocs/index.html
+RUN cp -rf /WEB/dist/* /usr/local/apache2/htdocs/search
+#RUN cp -rf /WEB/dist/assets /usr/local/apache2/htdocs/search
+EXPOSE 80
+CMD ["-D", "FOREGROUND"]
+ENTRYPOINT ["apachectl"]
